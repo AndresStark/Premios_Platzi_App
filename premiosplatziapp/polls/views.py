@@ -3,6 +3,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.db.models import Count
 
 from .models import Question, Choice
 
@@ -33,15 +34,16 @@ from .models import Question, Choice
 #     return render(request, "polls/results.html", {
 #         "question": question
 #     })
-
+        
 class IndexView(generic.ListView):
-    template_name = "polls/index.html"
+    template_name: str = "polls/index.html"
     context_object_name = "latest_question_list"
 
     def get_queryset(self):
-        """Return the last five published questions"""
-        return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
-        
+        """Return the last five published questions, that have at least two choices"""
+        question = Question.objects.filter(pub_date__lte=timezone.now())
+        question = question.alias(entries=Count("choice")).filter(entries__gte=2)
+        return question.order_by("-pub_date")[:5]
 
 class DetailView(generic.DetailView):
     model = Question
