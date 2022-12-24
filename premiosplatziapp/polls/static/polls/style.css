@@ -1,7 +1,9 @@
-li a {
-    color: blue;
-}
-/* 
 body {
-    background: white url("./images/background.gif") no-repeat;
-} */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    height: 100vh;
+    background: hsl(204, 100%, 5%);
+    font-family: Arial, Helvetica, sans-serif;
+}
